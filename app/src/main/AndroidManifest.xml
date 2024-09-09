@@ -31,6 +31,7 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ActivityConfigRefreshMediaCacheAction"
             android:exported="true"
@@ -40,6 +41,44 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
+        <activity android:name=".ActivityConfigBasicEvent"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="My Event Condition">
+            <intent-filter>
+                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ActivityConfigAppUsageEvent"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="AppUsage Event Condition">
+            <intent-filter>
+                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ActivityConfigBasicState"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="My State Condition">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_CONDITION" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".UsageAccessibilityService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <activity android:name=".AppPermissionSettingsActivity"/>
     </application>
 
 </manifest>
