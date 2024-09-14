@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <!--    app usage title-->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -37,6 +41,15 @@
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="Refresh MediaCache Action">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ActivityConfigUsageTaskerAction"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="query usage">
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
@@ -79,6 +92,11 @@
         </service>
 
         <activity android:name=".AppPermissionSettingsActivity"/>
+        <service
+            android:name=".UsageStatsService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

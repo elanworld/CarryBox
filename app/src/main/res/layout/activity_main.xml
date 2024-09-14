@@ -8,9 +8,10 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="tasker tools"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,8 +21,12 @@
         android:id="@+id/perm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="权限"
-        tools:layout_editor_absoluteX="157dp"
-        tools:layout_editor_absoluteY="398dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="299dp"
+        android:text="@string/permission"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

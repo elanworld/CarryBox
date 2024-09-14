@@ -80,6 +80,8 @@ public class AppPermissionSettingsActivity extends AppCompatActivity {
                 filePermission.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 filePermission.setAction(MANAGE_ALL_FILES_ACCESS_PERMISSION);
                 startActivity(filePermission);
+            }else {
+                Toast.makeText(this, "已获取", Toast.LENGTH_SHORT).show();
             }
             return true;
         }
@@ -104,6 +106,8 @@ public class AppPermissionSettingsActivity extends AppCompatActivity {
                     Toast.makeText(this, "无法开启允许查看使用情况的应用界面", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
+            } else {
+                Toast.makeText(this, "已获取", Toast.LENGTH_SHORT).show();
             }
             return true;
         }

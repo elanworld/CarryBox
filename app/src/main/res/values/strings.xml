@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CarryBox</string>
+    <string name="permission">权限</string>
 </resources>
