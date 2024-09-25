@@ -106,6 +106,9 @@ public class UsageStatsService extends Service {
                 e.printStackTrace();
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return UsageStatsServiceKotlinKt.queryHourlyUsage(this);
+        }
         List<UsageStats> usageStatsList = queryUsageStatsInRange(this, startTime, endTime);
         Map<String, AppUsage> appUsageMap = new HashMap<>();
         for (UsageStats usageStats : usageStatsList) {

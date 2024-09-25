@@ -18,7 +18,7 @@ import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionSatisf
 // 输入定义类
 @TaskerInputRoot
 class AppUsageInput @JvmOverloads constructor(
-    @field:TaskerInputField("path", labelResIdName = "Path") var path: String? = null
+    @field:TaskerInputField("input", labelResIdName = "input") var input: String? = null
 )
 
 // 输出定义类
@@ -60,7 +60,6 @@ class ActivityConfigAppUsageEvent : Activity(), TaskerPluginConfig<AppUsageInput
         get() = TaskerInput(AppUsageInput(readFromSharedPreferences(context, "path")))
 
     override fun assignFromInput(input: TaskerInput<AppUsageInput>) {
-        input.regular.path?.let { saveToSharedPreferences(context, "path", it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
