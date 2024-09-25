@@ -15,12 +15,13 @@ import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultCondition
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionSatisfied
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultConditionUnsatisfied
+import net.dinglisch.android.tasker.TaskerPlugin
 
 // 输入定义类
 @TaskerInputRoot
 class AppUsageInput @JvmOverloads constructor(
     @field:TaskerInputField("input", labelResIdName = "input") var input: String? = null,
-    @field:TaskerInputField("text", labelResIdName = "text") var text: Boolean = false
+    @field:TaskerInputField("text", labelResIdName = "text") var text: String? = null
 )
 
 // 输出定义类
@@ -55,7 +56,10 @@ class AppUsageRunner : TaskerPluginRunnerConditionEvent<AppUsageInput, AppUsageO
         input: TaskerInput<AppUsageInput>,
         update: AppUsageUpdate?
     ): TaskerPluginResultCondition<AppUsageOutput> {
-        if (input.regular.text) {
+        if (update?.app?.let { input.regular.input?.contains(it) } == false) {
+            return TaskerPluginResultConditionUnsatisfied()
+        }
+        if (input.regular.text == "1") {
             return TaskerPluginResultConditionSatisfied(context, AppUsageOutput(update?.app,update?.text))
         } else {
             // 检查当前包名是否与上一个包名不同
@@ -84,12 +88,10 @@ class ActivityConfigAppUsageEvent : Activity(), TaskerPluginConfig<AppUsageInput
 
     override val context get() = applicationContext
     override val inputForTasker: TaskerInput<AppUsageInput>
-        get() = TaskerInput(AppUsageInput(""))
+        get() = TaskerInput(AppUsageInput(inputText[0],inputText[1]))
     var inputText :List<String>  = arrayListOf()
 
     override fun assignFromInput(input: TaskerInput<AppUsageInput>) {
-        input.regular.input = "inputText[0]"
-        input.regular.text = inputText[1] == "1"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -105,8 +105,6 @@ class ActivityConfigRefreshMediaCacheAction : Activity(), TaskerPluginConfig<Ref
         get() = TaskerInput(RefreshMediaCacheInput(readFromSharedPreferences(context, "path")))
 
     override fun assignFromInput(input: TaskerInput<RefreshMediaCacheInput>) {
-        input.regular.path?.let { saveToSharedPreferences(context, "path", it) }
-        editText.setText(input.regular.path)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

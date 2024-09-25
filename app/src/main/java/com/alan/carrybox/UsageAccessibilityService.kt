@@ -33,8 +33,8 @@ class UsageAccessibilityService : AccessibilityService() {
             if (rootNode != null) {
                 // 遍历根节点下的所有子节点，提取文本信息
                 val textList = mutableListOf<String>()
-                text = textList.joinToString(separator = " ")
                 traverseNode(rootNode, textList)
+                text = textList.joinToString(separator = " ")
             }
             applicationContext.triggerAppUsageTaskerEvent(AppUsageUpdate(packageName,text))
         }
