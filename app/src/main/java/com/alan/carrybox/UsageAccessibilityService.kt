@@ -17,16 +17,7 @@ class UsageAccessibilityService : AccessibilityService() {
             // 获取当前窗口的包名和页面标题
             val packageName = event.packageName?.toString() ?: return
             val pageTitle = event.text.toString()
-
-            // 检查当前包名是否与上一个包名不同
-            if (packageName != previousPackageName) {
-                // 当包名发生变化时触发事件
-                applicationContext.triggerAppUsageTaskerEvent(AppUsageUpdate(packageName))
-
-                // 更新上一个包名
-                previousPackageName = packageName
-            }
-
+            var text:String? = null
             // 打印包名和页面标题
             println("$packageName $pageTitle")
 
@@ -41,8 +32,11 @@ class UsageAccessibilityService : AccessibilityService() {
             val rootNode = rootInActiveWindow
             if (rootNode != null) {
                 // 遍历根节点下的所有子节点，提取文本信息
-                traverseNode(rootNode)
+                val textList = mutableListOf<String>()
+                text = textList.joinToString(separator = " ")
+                traverseNode(rootNode, textList)
             }
+            applicationContext.triggerAppUsageTaskerEvent(AppUsageUpdate(packageName,text))
         }
     }
 
@@ -58,21 +52,23 @@ class UsageAccessibilityService : AccessibilityService() {
         editor.apply()
     }
 
-    private fun traverseNode(node: AccessibilityNodeInfo?) {
+    private fun traverseNode(node: AccessibilityNodeInfo?, textList: MutableList<String>): MutableList<String> {
         if (node == null) {
-            return
+            return textList
         }
 
         // 检查节点是否包含文本内容
         if (node.text != null) {
             val text = node.text.toString()
-            // 处理文本内容，例如保存到本地或打印输出
-            println("Text: $text")
+            // 将文本内容添加到列表
+            textList.add(text)
         }
 
         // 递归遍历子节点
         for (i in 0 until node.childCount) {
-            traverseNode(node.getChild(i))
+            traverseNode(node.getChild(i), textList)
         }
+
+        return textList
     }
 }
