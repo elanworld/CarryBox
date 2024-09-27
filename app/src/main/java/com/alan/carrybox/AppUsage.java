@@ -337,5 +337,6 @@ public class AppUsage {
     public void setSubtime23(String subtime23) {
         this.subtime23 = subtime23;
     }
+
 }
 

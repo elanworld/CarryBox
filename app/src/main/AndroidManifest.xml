@@ -92,6 +92,7 @@
         </service>
 
         <activity android:name=".AppPermissionSettingsActivity"/>
+        <activity android:name=".DynamicButtonActivity"/>
         <service
             android:name=".UsageStatsService"
             android:enabled="true"

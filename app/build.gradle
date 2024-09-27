@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -12,7 +15,12 @@ android {
         minSdk 21
         targetSdk 34
         versionCode 1
-        versionName "1.0"
+        // 使用 SimpleDateFormat 格式化日期
+        def dateFormat = new SimpleDateFormat("yyyyMMdd")
+        def currentDate = dateFormat.format(new Date())
+
+        // 动态设置 versionName
+        versionName "1.0-" + currentDate
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

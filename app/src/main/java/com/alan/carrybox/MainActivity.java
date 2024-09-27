@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         HashMap<Integer, Class<? extends Activity>> hashMap = new HashMap<>() ;
         hashMap.put(R.id.perm, AppPermissionSettingsActivity.class);
+        hashMap.put(R.id.button_show, DynamicButtonActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             hashMap.forEach((k,v) -> {
                 Button button = root.findViewById(k);
