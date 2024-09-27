@@ -51,9 +51,6 @@ public class UsageStatsService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.usageStatsManager = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
-        }
     }
 
     @Override
@@ -67,13 +64,9 @@ public class UsageStatsService extends Service {
         startTime.set(getDayTimeInMillis(null, true));
         endTime.set(getDayTimeInMillis(null, false));
         List<AppUsage> usageStatsList = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            usageStatsList = queryUsageStats(startTime.get(), endTime.get());
-            return usageStatsList;
-        }
-
-        Toast.makeText(this, "版本不支持", Toast.LENGTH_SHORT).show();
+        usageStatsList = queryUsageStats(this);
         return usageStatsList;
+
     }
 
 
@@ -92,24 +85,44 @@ public class UsageStatsService extends Service {
         return calendar.getTimeInMillis();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private List<AppUsage> queryUsageStats(long startTime, long endTime) {
-
+    public List<AppUsage> queryUsageStats(Context context) {
         // 首先判断获取到的list是否为空 if (packageInfoList == null)
-        if (!hasUsageStatsPermission()) {
+        if (!this.hasUsageStatsPermission(context)) {
             try {
                 Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             } catch (Exception e) {
-                Toast.makeText(this, "无法开启允许查看使用情况的应用界面", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "无法开启允许查看使用情况的应用界面", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return UsageStatsServiceKotlinKt.queryHourlyUsage(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            return UsageStatsServiceKotlinKt.queryHourlyUsage(context);
         }
-        List<UsageStats> usageStatsList = queryUsageStatsInRange(this, startTime, endTime);
+        return new ArrayList<>();
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    public List<AppUsage> queryUsageStatsInRange(Context context, long startTime, long endTime) {
+        List<UsageStats> usageStatsList;
+        do {
+            // 查询使用统计数据
+            usageStatsList = ((UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE)).queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime);
+            // 如果返回数据为空且结束时间不超过今天，则将结束时间增加一天
+            if (usageStatsList.isEmpty() && endTime < System.currentTimeMillis()) {
+                // 增加一天
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(endTime);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                endTime = calendar.getTimeInMillis();
+            } else {
+                // 如果返回数据不为空或者结束时间超过今天，则退出循环
+                break;
+            }
+        } while (true);
         Map<String, AppUsage> appUsageMap = new HashMap<>();
         for (UsageStats usageStats : usageStatsList) {
             String packageName = usageStats.getPackageName();
@@ -140,37 +153,12 @@ public class UsageStatsService extends Service {
             }
         }
         return new ArrayList<>(appUsageMap.values());
-
     }
 
-    public List<UsageStats> queryUsageStatsInRange(Context context, long startTime, long endTime) {
-        List<UsageStats> usageStatsList = new ArrayList<>();
-        do {
-            // 查询使用统计数据
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                usageStatsList = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime);
-            }
-
-            // 如果返回数据为空且结束时间不超过今天，则将结束时间增加一天
-            if (usageStatsList.isEmpty() && endTime < System.currentTimeMillis()) {
-                // 增加一天
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(endTime);
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
-                endTime = calendar.getTimeInMillis();
-            } else {
-                // 如果返回数据不为空或者结束时间超过今天，则退出循环
-                break;
-            }
-        } while (true);
-
-        return usageStatsList;
-    }
-
-    private boolean hasUsageStatsPermission() {
-        AppOpsManager appOps = (AppOpsManager) this.getSystemService(Context.APP_OPS_SERVICE);
+    private boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(), this.getPackageName());
+                android.os.Process.myUid(), context.getPackageName());
         return mode == AppOpsManager.MODE_ALLOWED;
     }
 
