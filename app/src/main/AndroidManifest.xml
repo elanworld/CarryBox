@@ -3,10 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <!--    app usage title-->
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -54,7 +57,8 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityConfigBasicEvent"
+        <activity
+            android:name=".ActivityConfigBasicEvent"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="My Event Condition">
@@ -62,7 +66,8 @@
                 <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityConfigAppUsageEvent"
+        <activity
+            android:name=".ActivityConfigAppUsageEvent"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="AppUsage Event Condition">
@@ -79,6 +84,7 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_CONDITION" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".UsageAccessibilityService"
             android:exported="true"
@@ -91,13 +97,36 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <activity android:name=".AppPermissionSettingsActivity"/>
-        <activity android:name=".DynamicButtonActivity"/>
+        <activity android:name=".AppPermissionSettingsActivity" />
+        <activity android:name=".DynamicButtonActivity" />
+
         <service
             android:name=".UsageStatsService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"></service>
+        <service
+            android:name=".KeyEventRunAccessibilityService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
         </service>
+
+        <activity
+            android:name=".ActivityConfigKeyEventTaskerAction"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="key event">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
